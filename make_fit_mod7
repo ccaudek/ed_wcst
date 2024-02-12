@@ -1,0 +1,52 @@
+# Specify the shell to use for running commands
+SHELL := /bin/bash
+
+# Define variables for directories and files
+OUTPUT_DIR := data/processed/wcst
+SCRIPT_AN := src/r/stan/01_run_model7_an.R
+OUTPUT_FILE_AN := $(OUTPUT_DIR)/mod7_params_an.RDS
+SCRIPT_HC := src/r/stan/02_run_model7_hc.R
+OUTPUT_FILE_HC := $(OUTPUT_DIR)/mod7_params_hc.RDS
+SCRIPT_RI := src/r/stan/03_run_model7_ri.R
+OUTPUT_FILE_RI := $(OUTPUT_DIR)/mod7_params_ri.RDS
+
+# Default target
+all: $(OUTPUT_FILE_AN) $(OUTPUT_FILE_HC) $(OUTPUT_FILE_RI)
+
+# Specify the shell to use for running commands
+SHELL := /bin/bash
+
+# Define variables for directories, script paths, and output file paths
+OUTPUT_DIR := data/processed/wcst
+SCRIPT_AN := src/r/stan/01_run_model7_an.R
+OUTPUT_FILE_AN := $(OUTPUT_DIR)/mod7_params_an.csv
+SCRIPT_HC := src/r/stan/02_run_model7_hc.R
+OUTPUT_FILE_HC := $(OUTPUT_DIR)/mod7_params_hc.csv
+SCRIPT_RI := src/r/stan/03_run_model7_ri.R
+OUTPUT_FILE_RI := $(OUTPUT_DIR)/mod7_params_ri.csv
+
+# Default target to build all CSV files
+all: $(OUTPUT_FILE_AN) $(OUTPUT_FILE_HC) $(OUTPUT_FILE_RI)
+
+# Rule to generate mod7_params_an.csv if missing or script is newer
+$(OUTPUT_FILE_AN): $(SCRIPT_AN)
+	@echo "Generating $(OUTPUT_FILE_AN)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Rule to generate mod7_params_hc.csv if missing or script is newer
+$(OUTPUT_FILE_HC): $(SCRIPT_HC)
+	@echo "Generating $(OUTPUT_FILE_HC)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Rule to generate mod7_params_ri.csv if missing or script is newer
+$(OUTPUT_FILE_RI): $(SCRIPT_RI)
+	@echo "Generating $(OUTPUT_FILE_RI)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Phony target for cleaning up the generated files
+.PHONY: clean
+clean:
+	rm -f $(OUTPUT_FILE_AN) $(OUTPUT_FILE_HC) $(OUTPUT_FILE_RI)

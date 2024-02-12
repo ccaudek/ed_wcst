@@ -1,0 +1,37 @@
+# Specify the shell to use for running commands
+SHELL := /bin/bash
+
+# Define variables for directories and files
+OUTPUT_DIR := data/processed/wcst
+SCRIPT_AN := src/r/010_recoding_for_stan_an.R
+OUTPUT_FILE_AN := $(OUTPUT_DIR)/stanlist_an.RDS
+SCRIPT_HC := src/r/011_recoding_for_stan_hc.R
+OUTPUT_FILE_HC := $(OUTPUT_DIR)/stanlist_hc.RDS
+SCRIPT_RI := src/r/012_recoding_for_stan_ri.R
+OUTPUT_FILE_RI := $(OUTPUT_DIR)/stanlist_ri.RDS
+
+# Default target
+all: $(OUTPUT_FILE_AN) $(OUTPUT_FILE_HC) $(OUTPUT_FILE_RI)
+
+# Rule to generate the output file from the script for AN
+$(OUTPUT_FILE_AN): $(SCRIPT_AN)
+	@echo "Running script to generate $(OUTPUT_FILE_AN)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Rule to generate the output file from the script for HC
+$(OUTPUT_FILE_HC): $(SCRIPT_HC)
+	@echo "Running script to generate $(OUTPUT_FILE_HC)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Rule to generate the output file from the script for RI
+$(OUTPUT_FILE_RI): $(SCRIPT_RI)
+	@echo "Running script to generate $(OUTPUT_FILE_RI)..."
+	@mkdir -p $(OUTPUT_DIR)
+	Rscript $<
+
+# Phony target for cleaning up the generated files
+.PHONY: clean
+clean:
+	rm -f $(OUTPUT_FILE_AN) $(OUTPUT_FILE_HC) $(OUTPUT_FILE_RI)
